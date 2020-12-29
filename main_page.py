@@ -13,7 +13,7 @@ class MainApplication(tk.Frame):
 
     def show_output(self,message):
         self.text_area.config(state=tk.NORMAL)
-        if message == 'CLEAR':
+        if message == "CLEAR":
             self.text_area.delete(1.0,tk.END)
         else:
             self.text_area.insert(tk.INSERT,message)
@@ -24,9 +24,7 @@ class MainApplication(tk.Frame):
         selection = self.comboExample.get()
 
     def output_clear(self):
-        self.text_area.config(state=tk.NORMAL)
-        self.text_area.delete(1.0,tk.END)
-        self.text_area.config(state=tk.DISABLED)
+        self.show_output("CLEAR")
     
     def import_csv(self):
         filename = askopenfilename()
@@ -34,11 +32,8 @@ class MainApplication(tk.Frame):
         with open(filename, newline='') as csvfile:
             data = list(csv.reader(csvfile))
             for value in data:
-                #self.text_area.insert(tk.INSERT,value)
                 for val in value:
-                    self.text_area.config(state=tk.NORMAL)
-                    self.text_area.insert(tk.INSERT,val)
-                    self.text_area.config(state=tk.DISABLED)
+                    self.show_output(val)
 
     def configure_gui(self):
        #ComboBox
