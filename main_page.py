@@ -1,15 +1,27 @@
 import tkinter as tk
 import csv
+import statistics as sts
 from tkinter.filedialog import askopenfilename
 from tkinter import scrolledtext
 from tkinter import ttk
 
 class MainApplication(tk.Frame):
-    def __init__(self, master):
+    
+    data_list = []
+    def __init__(self, master):      
         self.master = master
         tk.Frame.__init__(self, self.master)
+        self.create_menubar()
         self.create_widgets()
         self.configure_gui()
+
+    def create_menubar(self):
+        #Menu Bar
+        self.menubar = tk.Menu(root)
+        self.filemenu = tk.Menu(self.menubar, tearoff=0)
+        self.menubar.add_cascade(label = "File", menu = self.filemenu)
+        self.filemenu.add_command(label="New", command=self.donothing)
+        root.config(menu = self.menubar)
 
     def show_output(self,message):
         self.text_area.config(state=tk.NORMAL)
@@ -22,21 +34,48 @@ class MainApplication(tk.Frame):
 
     def calc_selection(self):
         selection = self.comboExample.get()
+        if selection == "Mean":
+            self.show_output("CLEAR")
+            self.show_output(sts.mean(self.data_list))
+        if selection == "Median":
+            self.show_output("CLEAR")
+            self.show_output(sts.median(self.data_list))
+        if selection == "Mode":
+            self.show_output("CLEAR")
+            self.show_output(sts.mode(self.data_list))
+        if selection == "Range":
+            self.show_output("CLEAR")
+            self.show_output((max(self.data_list)) - (min(self.data_list)))
+        if selection == "Sample Standard Deviation":
+            self.show_output("CLEAR")
+            self.show_output(sts.stdev(self.data_list))
+        if selection == "Sample Variance":
+            self.show_output("CLEAR")
+            self.show_output(sts.variance(self.data_list))
+        if selection == "Population Standard Deviation":
+            self.show_output("CLEAR")
+            self.show_output(sts.pstdev(self.data_list))
+        if selection == "Population Variance":
+            self.show_output("CLEAR")
+            self.show_output(sts.pvariance(self.data_list))
+        
 
     def output_clear(self):
         self.show_output("CLEAR")
     
     def import_csv(self):
-        filename = askopenfilename()
+        self.data_list.clear()
+        #filename = askopenfilename()
+        filename="/Users/mani/scripts/Statistics_Python_Program/Dataset.csv"
         self.show_output("CSV Imported : "+filename)
         with open(filename, newline='') as csvfile:
             data = list(csv.reader(csvfile))
             for value in data:
                 for val in value:
-                    self.show_output(val)
+                    self.data_list.append(float(val))
 
     def configure_gui(self):
-       #ComboBox
+        #ComboBox
         self.comboExample.pack(side="bottom")
         #Calculate Button
         self.calculate_button.pack(side="bottom")
@@ -49,9 +88,20 @@ class MainApplication(tk.Frame):
         #CSV Import Button
         self.button_csv.pack(side="bottom") 
 
+    def donothing(self):
+        print("donothing")
+
     def create_widgets(self):
         #ComboBox
-        self.comboExample = ttk.Combobox(root, values=["Mean","Medium","Range"])
+        self.comboExample = ttk.Combobox(root, values=["Mean",
+                                                       "Median",
+                                                       "Mode",
+                                                       "Range",
+                                                       "Sample Standard Deviation",
+                                                       "Sample Variance",
+                                                       "Population Standard Deviation",
+                                                       "Population Variance"
+                                                       ])
         #Calculate Button
         self.calculate_button = tk.Button(root, text='Calculate!', foreground='green', width=25, command=self.calc_selection)
         #Clear Output Button
