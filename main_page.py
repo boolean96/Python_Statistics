@@ -19,8 +19,8 @@ class MainApplication(tk.Frame):
         #Menu Bar
         self.menubar = tk.Menu(root)
         self.filemenu = tk.Menu(self.menubar, tearoff=0)
-        self.menubar.add_cascade(label = "File", menu = self.filemenu)
-        self.filemenu.add_command(label="New", command=self.donothing)
+        self.menubar.add_cascade(label = "Models", menu = self.filemenu)
+        self.filemenu.add_command(label="Multiple Regression", command=self.multiple_regression)
         root.config(menu = self.menubar)
 
     def show_output(self,message):
@@ -31,6 +31,16 @@ class MainApplication(tk.Frame):
             self.text_area.insert(tk.INSERT,message)
             self.text_area.update_idletasks()
         self.text_area.config(state=tk.DISABLED)
+    
+    def multiple_regression(self):
+        self.show_output("CLEAR")
+        self.show_output("Run Multiple Regression Model")
+        #self.root.withdraw()
+        t = tk.Toplevel(self)
+        t.wm_title("Multiple Regression")
+        l = tk.Label(t, text="Run Multiple Regression Model")
+        l.pack(side="top", fill="both", expand=True, padx=100, pady=100)
+        print("Run Multiple Regression Model")
 
     def calc_selection(self):
         selection = self.comboExample.get()
@@ -65,8 +75,7 @@ class MainApplication(tk.Frame):
     
     def import_csv(self):
         self.data_list.clear()
-        #filename = askopenfilename()
-        filename="/Users/mani/scripts/Statistics_Python_Program/Dataset.csv"
+        filename = askopenfilename()
         self.show_output("CSV Imported : "+filename)
         with open(filename, newline='') as csvfile:
             data = list(csv.reader(csvfile))
@@ -87,9 +96,6 @@ class MainApplication(tk.Frame):
         self.button.pack()
         #CSV Import Button
         self.button_csv.pack(side="bottom") 
-
-    def donothing(self):
-        print("donothing")
 
     def create_widgets(self):
         #ComboBox
